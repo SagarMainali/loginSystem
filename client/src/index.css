@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* debug border */
+.b {
+  @apply border-2 border-red-500;
+}
+
+.form-container{
+    @apply h-screen flex flex-col justify-center items-center gap-2;
+}
+
+input {
+  @apply border border-primary-gray/70 rounded-md outline-none px-4 py-1.5 min-w-[250px];
+}
+
+.error{
+  @apply text-xs text-red-500;
+}
