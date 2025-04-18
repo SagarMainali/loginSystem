@@ -18,17 +18,22 @@ export const signup = (req:Request,res:Response) => {
   users.push({ email, password });
   return res.status(201).json({ message: "User registered successfully" });
 }catch{
-  return res.status(400)
+  return res.status(400).json({ message: "Bad request" });
 }
 };
 
 export const login = (req:Request,res:Response) => {
-  const { email, password } = req.body;
+  try { // CHANGE: Added try/catch block for consistency with signup function
+    const { email, password } = req.body;
 
-  const user = users.find(user => user.email === email && user.password === password);
-  if (!user) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    const user = users.find(user => user.email === email && user.password === password);
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({ message: "Login successful", user });
+  } catch (error) {
+    // CHANGE: Added error handling
+    return res.status(400).json({ message: "Bad request" });
   }
-
-  return res.status(200).json({ message: "Login successful", user });
 };
