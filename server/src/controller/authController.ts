@@ -6,24 +6,24 @@ interface RequestBodyType {
   password: string
 }
 
-export const signup = (req:Request,res:Response) => {
-  try{
-  const { email, password } = req.body;
+export const signup = (req: Request<{}, {}, RequestBodyType>, res: Response) => {
+  try {
+    const { email, password } = req.body;
 
-  const exists = users.find(user => user.email === email);
-  if (exists) {
-    return res.status(409).json({ message: "User already exists" });
+    const exists = users.find(user => user.email === email);
+    if (exists) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    users.push({ email, password });
+    return res.status(201).json({ message: "User registered successfully", email });
+  } catch {
+    return res.status(400).json({ message: "Bad request" });
   }
-
-  users.push({ email, password });
-  return res.status(201).json({ message: "User registered successfully" });
-}catch{
-  return res.status(400).json({ message: "Bad request" });
-}
 };
 
-export const login = (req:Request,res:Response) => {
-  try { // CHANGE: Added try/catch block for consistency with signup function
+export const login = (req: Request<{}, {}, RequestBodyType>, res: Response) => {
+  try {
     const { email, password } = req.body;
 
     const user = users.find(user => user.email === email && user.password === password);
@@ -31,9 +31,9 @@ export const login = (req:Request,res:Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    return res.status(200).json({ message: "Login successful", user });
+    return res.status(200).json({ message: "Login successful", email });
   } catch (error) {
-    // CHANGE: Added error handling
+
     return res.status(400).json({ message: "Bad request" });
   }
 };

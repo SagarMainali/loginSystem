@@ -31,17 +31,18 @@ const authSlice = createSlice({
     builder
       // Login
       .addCase(login.pending, (state) => {
+        state.isLoggedIn = false;
         state.loading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
         state.isLoggedIn = true;
-        state.user = action.payload.username || 'User';
+        state.loading = false;
+        state.user = action.payload.email;
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
         state.isLoggedIn = false;
+        state.loading = false;
         state.error = action.payload as string;
       })
 
@@ -52,12 +53,10 @@ const authSlice = createSlice({
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = true;
-        state.user = action.payload.username || 'User';
+        state.user = action.payload.email;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = false;
         state.error = action.payload as string;
       });
   }

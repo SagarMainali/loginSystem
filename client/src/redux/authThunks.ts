@@ -6,7 +6,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials: { email: string; password: string; }, thunkAPI) => {
     try {
-      const response = await axios.post('/api/login', credentials);
+      const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || 'Invalid Credentials!');
@@ -19,7 +19,7 @@ export const signup = createAsyncThunk(
   'auth/signup',
   async (userData: { email: string; password: string; }, thunkAPI) => {
     try {
-      const response = await axios.post('/api/signup', userData);
+      const response = await axios.post('http://localhost:5000/api/auth/signup/', userData);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || 'User registration failed!');

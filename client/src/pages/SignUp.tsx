@@ -2,8 +2,17 @@ import { NavLink } from 'react-router-dom';
 
 import Form from '../components/Form'
 import { signup } from '../redux/authThunks';
+import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
+import Modal from '../components/modal/Modal';
 
 function SignUp() {
+
+    const { user } = useSelector((state: RootState) => state.auth);
+
+    if (user) {
+        return <Modal />
+    }
 
     return (
         <div className='form-container'>

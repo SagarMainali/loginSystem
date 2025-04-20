@@ -1,9 +1,17 @@
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink } from 'react-router-dom';
 
 import Form from '../components/Form'
 import { login } from '../redux/authThunks';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 function Login() {
+
+  const { isLoggedIn } = useSelector((state: RootState) => state.auth);
+
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className='form-container'>
