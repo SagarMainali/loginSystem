@@ -2,17 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import { login, signup } from './authThunks';
 
 interface AuthState {
-  isLoggedIn: boolean;
+  token: string | null;
   user: string | null;
   loading: boolean;
   error: string | null;
+  showModal: boolean;
 }
 
 const initialState: AuthState = {
-  isLoggedIn: false,
+  token: localStorage.getItem("token") || null,
   user: null,
   loading: false,
   error: null,
+  showModal: false,
 };
 
 const authSlice = createSlice({
@@ -20,8 +22,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.isLoggedIn = false;
       state.user = null;
+      state.token = null;
+    },
+    resetModal:(state)=> {
+      state.showModal = false;
     },
     clearError: (state) => {
       state.error = null;
@@ -31,17 +36,16 @@ const authSlice = createSlice({
     builder
       // Login
       .addCase(login.pending, (state) => {
-        state.isLoggedIn = false;
         state.loading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
         state.loading = false;
         state.user = action.payload.email;
+        state.token = action.payload.token;
+        localStorage.setItem("token", action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
-        state.isLoggedIn = false;
         state.loading = false;
         state.error = action.payload as string;
       })
@@ -54,6 +58,7 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.email;
+        state.showModal = true;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;

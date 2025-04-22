@@ -1,5 +1,13 @@
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv'
+
 import { users } from '../db';
+
+dotenv.config()
+
+const SECRET_KEY = process.env.SECRET_KEY;
+if (!SECRET_KEY) throw new Error("Missing SECRET_KEY");
 
 interface RequestBodyType {
   email: string,
@@ -23,6 +31,7 @@ export const signup = (req: Request<{}, {}, RequestBodyType>, res: Response) => 
 };
 
 export const login = (req: Request<{}, {}, RequestBodyType>, res: Response) => {
+
   try {
     const { email, password } = req.body;
 
@@ -30,10 +39,14 @@ export const login = (req: Request<{}, {}, RequestBodyType>, res: Response) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-
-    return res.status(200).json({ message: "Login successful", email });
+    const token = jwt.sign({ email }, SECRET_KEY);
+    res.json({ token });
   } catch (error) {
-
     return res.status(400).json({ message: "Bad request" });
   }
+};
+
+export const getDashboard = (req: Request, res: Response) => {
+  const user = (req as any).user; // you can make this strongly typed later
+  res.json({ email: user.email });
 };

@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AsyncThunk } from '@reduxjs/toolkit';
 
 import { AppDispatch, RootState } from '../redux/store';
 import { clearError } from '../redux/authSlice';
@@ -8,7 +9,7 @@ import '../styles/loader.css'
 import Button from './common/Button';
 
 type FormProps = {
-    action: (formdata: { email: string; password: string }) => any;
+    action: AsyncThunk<any, { email: string; password: string }, any>;
     buttonName: string;
 };
 
@@ -27,6 +28,8 @@ function Form({ action, buttonName }: FormProps) {
 
     const { pathname } = useLocation()
 
+    const navigate = useNavigate()
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormdata(prev => ({
@@ -35,9 +38,13 @@ function Form({ action, buttonName }: FormProps) {
         }));
     };
 
-    const handleSubmission = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(action(formdata));
+        const result = await dispatch(action(formdata));
+        // further actions for login
+        if (result.type.includes('login') && action.fulfilled.match(result)) {
+            navigate('/');
+        }
     };
 
     useEffect(() => {

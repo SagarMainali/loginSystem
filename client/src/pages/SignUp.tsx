@@ -8,9 +8,9 @@ import Modal from '../components/modal/Modal';
 
 function SignUp() {
 
-    const { user } = useSelector((state: RootState) => state.auth);
+    const { showModal } = useSelector((state: RootState) => state.auth);
 
-    if (user) {
+    if (showModal) {
         return <Modal />
     }
 
