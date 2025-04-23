@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { login, signup } from './authThunks';
 
 interface AuthState {
-  token: string | null;
-  user: string | null;
+  token: string | null; // to validate access to protected routes
+  user: string | null; // shown to dashboard after user registration
   loading: boolean;
   error: string | null;
   showModal: boolean;
@@ -22,10 +22,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null;
       state.token = null;
     },
-    resetModal:(state)=> {
+    resetUserAndModal:(state)=> {
+      state.user = null;
       state.showModal = false;
     },
     clearError: (state) => {
@@ -41,7 +41,6 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.email;
         state.token = action.payload.token;
         localStorage.setItem("token", action.payload.token);
       })
@@ -67,5 +66,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, resetUserAndModal } = authSlice.actions;
 export default authSlice.reducer;

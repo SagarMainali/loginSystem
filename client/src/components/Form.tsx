@@ -53,7 +53,7 @@ function Form({ action, buttonName }: FormProps) {
 
     return (
         <form onSubmit={handleSubmission} className='flex flex-col gap-3'>
-            <input type='text' placeholder='Email' name='email' onChange={handleChange} />
+            <input type='email' placeholder='Email' name='email' onChange={handleChange} />
             <input type='password' placeholder='Password' name='password' onChange={handleChange} />
             <Button loading={loading} buttonName={buttonName} />
             {error && <p className='error -mt-2'>{error}</p>}
