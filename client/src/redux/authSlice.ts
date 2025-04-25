@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { login, signup } from './authThunks';
+
+import { login, signup, deleteUser } from './authThunks';
 
 interface AuthState {
   token: string | null; // to validate access to protected routes
   user: string | null; // shown to dashboard after user registration
   loading: boolean;
   error: string | null;
-  showModal: boolean;
+  showMessage: boolean;
+  showSetting: boolean;
 }
 
 const initialState: AuthState = {
@@ -14,7 +16,8 @@ const initialState: AuthState = {
   user: null,
   loading: false,
   error: null,
-  showModal: false,
+  showMessage: false,
+  showSetting: false
 };
 
 const authSlice = createSlice({
@@ -22,11 +25,17 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      localStorage.clear();
       state.token = null;
-    },
-    resetUserAndModal:(state)=> {
+      state.showSetting = false;
       state.user = null;
-      state.showModal = false;
+    },
+    resetUserAndModal: (state) => {
+      state.user = null;
+      state.showMessage = false;
+    },
+    toggleSetting: (state) => {
+      state.showSetting = !state.showSetting
     },
     clearError: (state) => {
       state.error = null;
@@ -41,6 +50,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload.email;
         state.token = action.payload.token;
         localStorage.setItem("token", action.payload.token);
       })
@@ -57,14 +67,28 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.email;
-        state.showModal = true;
+        state.showMessage = true;
       })
       .addCase(signup.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // deleteUser
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.loading = false;
+        state.showMessage = true;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   }
 });
 
-export const { logout, clearError, resetUserAndModal } = authSlice.actions;
+export const { logout, clearError, resetUserAndModal, toggleSetting } = authSlice.actions;
 export default authSlice.reducer;

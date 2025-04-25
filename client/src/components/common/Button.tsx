@@ -1,19 +1,21 @@
 import { useDispatch } from "react-redux"
+
 import { AppDispatch } from '../../redux/store';
 
 type ButtonProps = {
     loading: boolean;
     buttonName: string;
     type?: 'button' | 'submit';
-    onClick?: () => any
+    onClick?: () => any;
+    bgColor?: string 
 }
 
-function Button({ loading, buttonName, onClick, type = 'submit' }: ButtonProps) {
+function Button({ loading, buttonName, onClick, type = 'submit', bgColor = 'bg-primary-blue'}: ButtonProps) {
 
     const dispatch = useDispatch<AppDispatch>()
 
     return (
-        <button type={type} className='py-2 px-4 bg-primary-blue rounded-lg text-white font-semibold flex justify-center items-center disabled:bg-primary-blue/50'
+        <button type={type} className={`py-2 px-4 rounded-lg text-white font-semibold flex justify-center items-center disabled:bg-primary-blue/50 ${bgColor}`}
             disabled={loading}
             onClick={() => onClick && dispatch(onClick())}
         >

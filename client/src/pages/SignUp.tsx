@@ -4,13 +4,13 @@ import Form from '../components/Form'
 import { signup } from '../redux/authThunks';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
-import Modal from '../components/modal/Modal';
+import Modal from '../components/modal/Message';
 
 function SignUp() {
 
-    const { showModal } = useSelector((state: RootState) => state.auth);
+    const { showMessage } = useSelector((state: RootState) => state.auth);
 
-    if (showModal) {
+    if (showMessage) {
         return <Modal />
     }
 

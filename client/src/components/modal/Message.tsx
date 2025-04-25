@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
-import { RootState, AppDispatch } from "../../redux/store";
 import { NavLink } from "react-router-dom";
+
+import { RootState, AppDispatch } from "../../redux/store";
 import { resetUserAndModal } from '../../redux/authSlice';
 
 function Modal() {

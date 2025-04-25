@@ -3,17 +3,11 @@ import { RootState } from "../redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import Button from "../components/common/Button";
-import { logout } from '../redux/authSlice';
-import { useNavigate } from "react-router-dom";
-
 function Dashboard() {
 
-    const { loading, token } = useSelector((state: RootState) => state.auth);
+    const { token } = useSelector((state: RootState) => state.auth);
 
     const [email, setEmail] = useState("");
-
-    const navigate = useNavigate()
 
     useEffect(() => {
         axios
@@ -30,14 +24,11 @@ function Dashboard() {
             });
     }, []);
 
-    if (!token) {
-        navigate("/")
-    }
-
     return (
-        <div className='h-screen flex justify-center items-center gap-2 flex-col'>
-            <p className='text-lg'>Welcome <strong>{email}!</strong> to the Dashboard</p>
-            <Button type="button" loading={loading} buttonName='Log Out' onClick={logout} />
+        <div className='h-full flex justify-center items-center gap-2 flex-col'>
+            <p className='text-xl'>Welcome to Dashboard</p>
+            <h2>User: {email}</h2>
+            <div>*Dashboard content here*</div>
         </div>
     )
 }

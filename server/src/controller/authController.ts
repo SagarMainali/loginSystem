@@ -20,9 +20,9 @@ export const signup = async (req: Request<{}, {}, RequestBodyType>, res: Respons
     const { email, password } = req.body;
 
     // const exists =  users.find(user => user.email === email);
-    const alreadyRegisteredUser = await UserCredentials.find({ email });
-    console.log(alreadyRegisteredUser)
-    if (alreadyRegisteredUser.length > 0) {
+    const alreadyRegisteredUsers = await UserCredentials.find({ email });
+    console.log(alreadyRegisteredUsers)
+    if (alreadyRegisteredUsers.length > 0) {
       return res.status(409).json({ message: "The email you entered is already in use*" });
     }
 
@@ -36,18 +36,17 @@ export const signup = async (req: Request<{}, {}, RequestBodyType>, res: Respons
 };
 
 export const login = async (req: Request<{}, {}, RequestBodyType>, res: Response) => {
-
   try {
     const { email, password } = req.body;
 
     // const user = User.find(user => user.email === email && user.password === password);
-    const user = await UserCredentials.find({ email, password });
-    console.log(user)
-    if (user.length === 0) {
+    const users = await UserCredentials.find({ email, password });
+    console.log(users)
+    if (users.length === 0) {
       return res.status(401).json({ message: "Incorrect email or password*" });
     }
     const token = jwt.sign({ email }, SECRET_KEY);
-    res.json({ token });
+    res.json({ token, email });
   } catch (error) {
     return res.status(400).json({ message: "Bad request" });
   }
@@ -57,3 +56,17 @@ export const getDashboard = (req: Request, res: Response) => {
   const user = (req as any).user; // you can make this strongly typed later
   res.json({ email: user.email });
 };
+
+export const deleteUser = async (req: Request<{}, {}, RequestBodyType>, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const users = await UserCredentials.find({ email, password })
+    if (users.length === 0) {
+      return res.status(401).json({ message: "User doesn't exist*" });
+    }
+    await UserCredentials.deleteOne({ email, password });
+    return res.status(204).json({message: "User removed"})
+  }catch(error){
+    return res.status(400).json({message: "Bad request"})
+  }
+}

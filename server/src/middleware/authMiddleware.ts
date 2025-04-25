@@ -17,7 +17,7 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY) as JwtPayload;
-    req.user = { email: decoded.email };
+    req.user = { email: decoded.email }; // not sending whole document because it contains other props also
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });

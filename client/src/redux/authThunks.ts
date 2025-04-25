@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import axios from 'axios';
 
-// Login Thunk
+// login thunk
 export const login = createAsyncThunk(
   'auth/login',
   async (credentials: { email: string; password: string; }, thunkAPI) => {
@@ -14,7 +15,7 @@ export const login = createAsyncThunk(
   }
 );
 
-// Signup Thunk
+// signup thunk
 export const signup = createAsyncThunk(
   'auth/signup',
   async (credentials: { email: string; password: string; }, thunkAPI) => {
@@ -26,3 +27,16 @@ export const signup = createAsyncThunk(
     }
   }
 );
+
+// delete user thunk
+export const deleteUser = createAsyncThunk(
+  'auth/deleteUser',
+  async (credentials: { email: string; password: string; }, thunkAPI) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/deleteUser/', credentials);
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'User deletion failed!');
+    }
+  }
+)
