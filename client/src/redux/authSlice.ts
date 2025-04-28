@@ -7,8 +7,10 @@ interface AuthState {
   user: string | null; // shown to dashboard after user registration
   loading: boolean;
   error: string | null;
-  showMessage: boolean;
-  showSetting: boolean;
+  modal: {
+    message: boolean;
+    settings: boolean
+  };
 }
 
 const initialState: AuthState = {
@@ -16,8 +18,10 @@ const initialState: AuthState = {
   user: null,
   loading: false,
   error: null,
-  showMessage: false,
-  showSetting: false
+  modal: {
+    message: false,
+    settings: false,
+  }
 };
 
 const authSlice = createSlice({
@@ -27,15 +31,16 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.clear();
       state.token = null;
-      state.showSetting = false;
       state.user = null;
+      state.modal.settings = false;
     },
     resetUserAndModal: (state) => {
       state.user = null;
-      state.showMessage = false;
+      state.modal.message = false;
+      // state.modal.settings = false;
     },
     toggleSetting: (state) => {
-      state.showSetting = !state.showSetting
+      state.modal.settings = !state.modal.settings
     },
     clearError: (state) => {
       state.error = null;
@@ -50,9 +55,9 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
+        localStorage.setItem("token", action.payload.token);
         state.user = action.payload.email;
         state.token = action.payload.token;
-        localStorage.setItem("token", action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -67,7 +72,7 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.email;
-        state.showMessage = true;
+        state.modal.message = true;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -81,7 +86,7 @@ const authSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.loading = false;
-        state.showMessage = true;
+        state.modal.message = true;
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;

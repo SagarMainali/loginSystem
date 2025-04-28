@@ -28,7 +28,7 @@ function Dashboard() {
         <div className='h-full flex justify-center items-center gap-2 flex-col'>
             <p className='text-xl'>Welcome to Dashboard</p>
             <h2>User: {email}</h2>
-            <div>*Dashboard content here*</div>
+            <i>*Dashboard content here*</i>
         </div>
     )
 }
