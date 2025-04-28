@@ -9,7 +9,10 @@ function Login() {
     <div className='form-container'>
       <h2 className='text-lg font-medium'>Login to your account</h2>
       <Form action={login} buttonName="Login" />
-      <p className='text-sm'>Don't have an account? <NavLink className='text-primary-blue font-semibold' to='/signUp' replace>Sign up</NavLink></p>
+      <div className='text-sm flex flex-col text-primary-blue font-semibold items-center'>
+        <span className='cursor-pointer hover:underline'>Forget Password</span>
+        <NavLink className='hover:underline' to='/signUp' replace>Sign up</NavLink>
+      </div>
     </div>
   )
 }

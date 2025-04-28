@@ -41,8 +41,15 @@ function Form({ action, buttonName }: FormProps) {
     const handleSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const result = await dispatch(action(formdata));
-        // further actions for login
-        if (result.type.includes('login') && action.fulfilled.match(result)) {
+        
+        // clear form data upon succesful dispatch and navigate to home
+        // result.type.includes('login') && 
+        if (action.fulfilled.match(result)) {
+            setFormdata({
+                email: '',
+                password: ''
+            })
+            // specifically navigate to the root path when you need to see the state changes but the root path is currently not rendered with the DOM tree
             navigate('/');
         }
     };
@@ -55,7 +62,7 @@ function Form({ action, buttonName }: FormProps) {
         <form onSubmit={handleSubmission} className='flex flex-col gap-3'>
             <input type='email' placeholder='Email' name='email' onChange={handleChange} />
             <input type='password' placeholder='Password' name='password' onChange={handleChange} />
-            <Button loading={loading} buttonName={buttonName} />
+            <Button loading={loading} buttonName={buttonName} bgColor={buttonName === 'Delete Account' ? 'bg-red-500' : undefined} />
             {error && <p className='error -mt-2'>{error}</p>}
         </form>
     )

@@ -1,18 +1,18 @@
-import { useSelector, useDispatch } from "react-redux"
-import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux"
 
-import { RootState, AppDispatch } from "../../redux/store";
-import { resetUserAndModal } from '../../redux/authSlice';
+import { RootState } from "../../redux/store";
+import { resetModal } from '../../redux/authSlice';
+import Button from "../common/Button";
 
 function Message() {
 
-    const { user } = useSelector((state: RootState) => state.auth);
-    const dispatch = useDispatch<AppDispatch>()
+    const { modal: { message } } = useSelector((state: RootState) => state.auth);
 
     return (
-        <div className="bg-slate-50 rounded-md p-8">
-            <p className="mb-1">Welcome <strong>{user}</strong>, you have been registered!</p>
-            <p>Proceed to<NavLink className='text-primary-blue font-semibold' to='/login' replace onClick={() => { dispatch(resetUserAndModal()) }}> Login.</NavLink></p>
+        <div className="bg-slate-50 rounded-md p-8 flex items-center gap-2">
+            <p>{message}</p>
+            <Button buttonName='OK' onClickHandler={resetModal}/>
+            {/* no need to navigate to '/' path because this modal is already rendered on the home path */}
         </div>
     )
 }

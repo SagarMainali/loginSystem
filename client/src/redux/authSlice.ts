@@ -8,20 +8,35 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   modal: {
-    message: boolean;
-    settings: boolean
-  };
+    message: string | null;
+    settings: boolean;
+    deletion: boolean;
+  },
+  userDelete: boolean
 }
 
+interface SavedAuthData {
+  token: string;
+  user: string
+}
+
+const savedData = localStorage.getItem('authData');
+const parsedData: SavedAuthData = savedData ? JSON.parse(savedData) : { user: null, token: null };
+
+const savedUser = parsedData.user;
+const savedToken = parsedData.token;
+
 const initialState: AuthState = {
-  token: localStorage.getItem("token") || null,
-  user: null,
+  user: savedUser,
+  token: savedToken,
   loading: false,
   error: null,
   modal: {
-    message: false,
+    message: null,
     settings: false,
-  }
+    deletion: false,
+  },
+  userDelete: false
 };
 
 const authSlice = createSlice({
@@ -30,17 +45,18 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.clear();
-      state.token = null;
       state.user = null;
+      state.token = null;
       state.modal.settings = false;
     },
-    resetUserAndModal: (state) => {
-      state.user = null;
-      state.modal.message = false;
-      // state.modal.settings = false;
+    resetModal: (state) => {
+      state.modal.message = null;
     },
     toggleSetting: (state) => {
       state.modal.settings = !state.modal.settings
+    },
+    toggleDelete: (state) => {
+      state.modal.deletion = !state.modal.deletion
     },
     clearError: (state) => {
       state.error = null;
@@ -55,7 +71,12 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        localStorage.setItem("token", action.payload.token);
+        const authData = {
+          user: action.payload.email,
+          token: action.payload.token
+        };
+        localStorage.setItem('authData', JSON.stringify(authData));
+
         state.user = action.payload.email;
         state.token = action.payload.token;
       })
@@ -71,8 +92,7 @@ const authSlice = createSlice({
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.email;
-        state.modal.message = true;
+        state.modal.message = action.payload.message;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
@@ -84,9 +104,13 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteUser.fulfilled, (state) => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.modal.message = true;
+        localStorage.clear();
+        state.user = null;
+        state.token = null;
+        state.modal.settings = false;
+        state.modal.message = action.payload.message;
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
@@ -95,5 +119,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { logout, clearError, resetUserAndModal, toggleSetting } = authSlice.actions;
+export const { logout, clearError, resetModal, toggleSetting, toggleDelete } = authSlice.actions;
 export default authSlice.reducer;

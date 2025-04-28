@@ -29,7 +29,7 @@ export const signup = async (req: Request<{}, {}, RequestBodyType>, res: Respons
     // users.push({ email, password });
     const newUserCredentials = new UserCredentials({ email, password })
     await newUserCredentials.save()
-    return res.status(201).json({ message: "User registered successfully", email });
+    return res.status(201).json({ message: "User has been successfully registered." });
   } catch {
     return res.status(400).json({ message: "Bad request" });
   }
@@ -62,10 +62,10 @@ export const deleteUser = async (req: Request<{}, {}, RequestBodyType>, res: Res
     const { email, password } = req.body;
     const users = await UserCredentials.find({ email, password })
     if (users.length === 0) {
-      return res.status(401).json({ message: "User doesn't exist*" });
+      return res.status(401).json({ message: "Incorrect email or password" });
     }
     await UserCredentials.deleteOne({ email, password });
-    return res.status(204).json({message: "User removed"})
+    return res.status(201).json({message: "Your account has been deleted."})
   }catch(error){
     return res.status(400).json({message: "Bad request"})
   }
