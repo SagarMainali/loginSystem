@@ -24,10 +24,10 @@ export default function Settings() {
             {
                 !deletion
                     ? (<>
-                        <h2 className="text-lg font-semibold mb-2" > Account Settings</h2>
+                        <h2 className="text-lg font-semibold mb-4" > Account Settings</h2>
                         <div className="flex items-center gap-2 mb-2">
                             <span className="h-[40px] w-[40px] rounded-full p-1 bg-purple-500 flex justify-center items-center text-white font-bold">{user?.[0].toUpperCase()}</span>
-                            <h2 className="font-semibold">{user}</h2>
+                            <h2>{user}</h2>
                         </div>
                         <Button type="button" loading={loading} buttonName='Log Out' onClickHandler={handleLogout} />
                         <Button type="button" loading={loading} buttonName='Delete Account' onClickHandler={handleToggleDelete} bgColor="bg-red-500" />

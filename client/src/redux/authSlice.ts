@@ -113,6 +113,7 @@ const authSlice = createSlice({
         state.user = null;
         state.token = null;
         state.modal.settings = false;
+        state.modal.deletion = false;
         state.modal.message = action.payload.message;
       })
       .addCase(deleteUser.rejected, (state, action) => {
