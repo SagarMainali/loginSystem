@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { login, signup, deleteUser } from './authThunks';
+import { login, signup, deleteUser, searchUser, changePassword } from './authThunks';
 
 interface AuthState {
   token: string | null; // to validate access to protected routes
@@ -12,7 +12,7 @@ interface AuthState {
     settings: boolean;
     deletion: boolean;
   },
-  userDelete: boolean
+  accountRecovery: boolean
 }
 
 interface SavedAuthData {
@@ -36,7 +36,7 @@ const initialState: AuthState = {
     settings: false,
     deletion: false,
   },
-  userDelete: false
+  accountRecovery: false
 };
 
 const authSlice = createSlice({
@@ -57,6 +57,9 @@ const authSlice = createSlice({
     },
     toggleDelete: (state) => {
       state.modal.deletion = !state.modal.deletion
+    },
+    toggleAccountRecovery: (state) => {
+      state.accountRecovery = !state.accountRecovery
     },
     clearError: (state) => {
       state.error = null;
@@ -115,9 +118,38 @@ const authSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
+
+      // search user profile
+      .addCase(searchUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.email;
+      })
+      .addCase(searchUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // change password
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.modal.message = action.payload.message;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
   }
 });
 
-export const { logout, clearError, resetModal, toggleSetting, toggleDelete } = authSlice.actions;
+export const { logout, clearError, resetModal, toggleSetting, toggleDelete, toggleAccountRecovery } = authSlice.actions;
 export default authSlice.reducer;

@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard"
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
 import Layout from "./components/layout/Layout"
+import AccountRecovery from "./pages/AccountRecovery"
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/signUp" element={<SignUp />} />
+      <Route path="/accountRecovery" element={<AccountRecovery />} />
       <Route path="*" element={<Navigate to="/login" />} />
 
     </Routes>

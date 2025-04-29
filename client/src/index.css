@@ -8,7 +8,7 @@
 }
 
 .form-container{
-    @apply h-screen flex flex-col justify-center items-center gap-2;
+    @apply h-screen flex flex-col justify-center items-center gap-3;
 }
 
 input {
@@ -16,5 +16,5 @@ input {
 }
 
 .error{
-  @apply text-xs text-red-500;
+  @apply text-xs text-red-500 -mt-2;
 }

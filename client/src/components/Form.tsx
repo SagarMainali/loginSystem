@@ -20,7 +20,10 @@ type Formdata = {
 
 function Form({ action, buttonName }: FormProps) {
 
-    const [formdata, setFormdata] = useState<Formdata>({} as Formdata)
+    const [formdata, setFormdata] = useState<Formdata>({
+        email: '',
+        password: ''
+    })
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -60,10 +63,10 @@ function Form({ action, buttonName }: FormProps) {
 
     return (
         <form onSubmit={handleSubmission} className='flex flex-col gap-3'>
-            <input type='email' placeholder='Email' name='email' onChange={handleChange} />
-            <input type='password' placeholder='Password' name='password' onChange={handleChange} />
+            <input type='email' placeholder='Email' name='email' onChange={handleChange} value={formdata.email}/>
+            <input type='password' placeholder='Password' name='password' onChange={handleChange} value={formdata.password} />
             <Button loading={loading} buttonName={buttonName} bgColor={buttonName === 'Delete Account' ? 'bg-red-500' : undefined} />
-            {error && <p className='error -mt-2'>{error}</p>}
+            {error && <p className='error'>{error}</p>}
         </form>
     )
 }

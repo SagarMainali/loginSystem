@@ -62,11 +62,34 @@ export const deleteUser = async (req: Request<{}, {}, RequestBodyType>, res: Res
     const { email, password } = req.body;
     const users = await UserCredentials.find({ email, password })
     if (users.length === 0) {
-      return res.status(401).json({ message: "Incorrect email or password" });
+      return res.status(401).json({ message: "Incorrect email or password*" });
     }
     await UserCredentials.deleteOne({ email, password });
-    return res.status(201).json({message: "Your account has been deleted."})
+    return res.status(201).json({message: "Your account has been deleted."});
   }catch(error){
-    return res.status(400).json({message: "Bad request"})
+    return res.status(400).json({message: "Bad request"});
+  }
+}
+
+export const searchUser = async (req: Request<{}, {}, RequestBodyType>, res: Response) => {
+  try {
+    const { email } = req.body;
+    const users = await UserCredentials.find({ email })
+    if (users.length === 0) {
+      return res.status(401).json({ message: "This email doesn't match any user profile" });
+    }
+    return res.status(201).json({email})
+  }catch(error){
+    return res.status(400).json({message: "Bad request"});
+  }
+}
+
+export const changePassword = async(req: Request<{}, {}, RequestBodyType>, res: Response) => {
+  try{
+    const {email, password} = req.body;
+    await UserCredentials.updateOne({email}, {$set: {password}});
+    return res.status(201).json({message: "Password successfully changed. You can now proceed to login."});
+  }catch(error){
+    return res.status(400).json({message: "Bad request"});
   }
 }
