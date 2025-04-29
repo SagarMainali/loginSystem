@@ -10,6 +10,6 @@ router.post('/login', login);
 router.post('/signup', signup);
 router.post('/deleteUser', deleteUser);
 router.post('/searchUser', searchUser);
-router.post('/changePassword', changePassword);
+router.patch('/changePassword', changePassword);
 
 export default router;

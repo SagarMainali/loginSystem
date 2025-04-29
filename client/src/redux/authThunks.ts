@@ -59,7 +59,7 @@ export const changePassword = createAsyncThunk(
   'auth/changePassword',
   async (credentials: { email: string; password: string; }, thunkAPI) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/changePassword/', credentials);
+      const response = await axios.patch('http://localhost:5000/api/auth/changePassword/', credentials);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || 'Password update failed!');
