@@ -39,6 +39,24 @@ export default function AccountRecovery() {
         }
     };
 
+    const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            const target = e.target as HTMLInputElement;
+
+            if (target.type === 'email') {
+                handleUserSearch();
+            } else {
+                if (
+                    password.trim() &&
+                    confirmPassword.trim() &&
+                    password === confirmPassword
+                ) {
+                    handleChangePassword();
+                }
+            }
+        }
+    };
+
 
     return (
         <div className="form-container">
@@ -47,13 +65,13 @@ export default function AccountRecovery() {
                 ?
                 (<>
                     <label htmlFor="email_input" className="text-sm">Step 1 - Enter your registered email</label>
-                    <input key='email' type="email" id="email_input" onChange={(e) => setEmail(e.target.value)} value={email} />
+                    <input key='email' type="email" id="email_input" onChange={(e) => setEmail(e.target.value)} value={email} onKeyDown={handleEnterKey} />
                     {error && <p className="error">{error}</p>}
                     <Button buttonName="Proceed" onClickHandler={handleUserSearch} />
                 </>) : (<>
                     <h2 className="text-sm">Step 2 - Choose password</h2>
-                    <input key='password' type="text" placeholder="New Password" onChange={(e) => setPassword(e.target.value)} value={password} />
-                    <input key='confirm password' type="text" placeholder="Confirm New Password" onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} />
+                    <input key='password' type="text" placeholder="New Password" onChange={(e) => setPassword(e.target.value)} value={password} onKeyDown={handleEnterKey} />
+                    <input key='confirm password' type="text" placeholder="Confirm New Password" onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} onKeyDown={handleEnterKey} />
                     <Button buttonName="Update Password" onClickHandler={handleChangePassword} disabled={buttonDisabled} />
                 </>)
             }
