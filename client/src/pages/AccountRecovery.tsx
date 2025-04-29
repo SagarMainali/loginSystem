@@ -3,7 +3,8 @@ import { changePassword, searchUser } from "../redux/authThunks";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import Button from "../components/common/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearError } from "../redux/authSlice";
 
 export default function AccountRecovery() {
 
@@ -15,6 +16,8 @@ export default function AccountRecovery() {
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
+    const {pathname} = useLocation()
+
     useEffect(() => {
         if (password.trim() && confirmPassword.trim()) {
             setButtonDisabled(password !== confirmPassword);
@@ -22,6 +25,10 @@ export default function AccountRecovery() {
             setButtonDisabled(true);
         }
     }, [password, confirmPassword]);
+
+    useEffect(() => {
+        dispatch(clearError());
+    }, [pathname])
 
     const navigate = useNavigate()
 
